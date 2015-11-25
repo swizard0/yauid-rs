@@ -1,0 +1,8 @@
+[package]
+name = "yauid-rs"
+version = "0.1.0"
+authors = ["Alexey Voznyuk <me@swizard.info>"]
+
+[dependencies]
+libc = "*"
+yauid-sys-rs = { path = "yauid-sys-rs" }

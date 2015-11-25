@@ -1,0 +1,3 @@
+[submodule "yauid-sys-rs/yauid"]
+	path = yauid-sys-rs/yauid
+	url = https://github.com/lexborisov/yauid.git
