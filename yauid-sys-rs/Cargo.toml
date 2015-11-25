@@ -1,0 +1,15 @@
+[package]
+name = "yauid-sys-rs"
+version = "0.1.0"
+authors = ["Alexey Voznyuk <me@swizard.info>"]
+links = "yauid"
+build = "build.rs"
+
+[lib]
+name = "libyauid_sys"
+
+[dependencies]
+libc = "*"
+
+[build-dependencies]
+gcc = "*"
