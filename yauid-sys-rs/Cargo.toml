@@ -6,7 +6,7 @@ links = "yauid"
 build = "build.rs"
 
 [lib]
-name = "libyauid_sys"
+name = "yauid_sys"
 
 [dependencies]
 libc = "*"
