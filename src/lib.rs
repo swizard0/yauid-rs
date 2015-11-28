@@ -12,12 +12,15 @@ pub struct Yauid {
 
 impl Drop for Yauid { fn drop(&mut self) { self.close(); } }
 
+#[derive(Clone, Debug)]
+pub struct Error(pub String);
+
 impl Yauid {
-    pub fn new(filepath_key: &str, node_id: u64) -> Result<Yauid, String> {
-        let ffi_filepath_key = try!(ffi::CString::new(filepath_key.as_bytes()).map_err(|_| "invalid filepath_key".to_string()));
+    pub fn new(filepath_key: &str, node_id: u64) -> Result<Yauid, Error> {
+        let ffi_filepath_key = try!(ffi::CString::new(filepath_key.as_bytes()).map_err(|_| Error("invalid filepath_key".to_owned())));
         let ya = unsafe { yauid_init(ffi_filepath_key.as_ptr(), ptr::null()) };
         if ya.is_null() {
-            Err("yauid_init failure".to_string())
+            Err(Error("yauid_init failure".to_owned()))
         } else {
             let obj = Yauid {
                 _ffi_filepath_key: ffi_filepath_key,
@@ -29,20 +32,20 @@ impl Yauid {
                     unsafe { yauid_set_node_id(obj.ya, node_id) };
                     match unsafe { (*obj.ya).error } {
                         0 => Ok(obj),
-                        status => Err(obj.status_to_string(status)),
+                        status => Err(Error(obj.status_to_string(status))),
                     }
                 },
-                status => Err(obj.status_to_string(status)),
+                status => Err(Error(obj.status_to_string(status))),
             }
         }
     }
 
-    pub fn with_node_id(filepath_key: &str, filepath_node_id: &str) -> Result<Yauid, String> {
-        let ffi_filepath_key = try!(ffi::CString::new(filepath_key.as_bytes()).map_err(|_| "invalid filepath_key".to_string()));
-        let ffi_filepath_node_id = try!(ffi::CString::new(filepath_node_id.as_bytes()).map_err(|_| "invalid node_id".to_string()));
+    pub fn with_node_id(filepath_key: &str, filepath_node_id: &str) -> Result<Yauid, Error> {
+        let ffi_filepath_key = try!(ffi::CString::new(filepath_key.as_bytes()).map_err(|_| Error("invalid filepath_key".to_owned())));
+        let ffi_filepath_node_id = try!(ffi::CString::new(filepath_node_id.as_bytes()).map_err(|_| Error("invalid node_id".to_owned())));
         let ya = unsafe { yauid_init(ffi_filepath_key.as_ptr(), ffi_filepath_node_id.as_ptr()) };
         if ya.is_null() {
-            Err("yauid_init failure".to_string())
+            Err(Error("yauid_init failure".to_owned()))
         } else {
             let obj = Yauid {
                 _ffi_filepath_key: ffi_filepath_key,
@@ -51,7 +54,7 @@ impl Yauid {
             };
             match unsafe { (*obj.ya).error } {
                 0 => Ok(obj),
-                status => Err(obj.status_to_string(status)),
+                status => Err(Error(obj.status_to_string(status))),
             }
         }
     }
@@ -62,11 +65,11 @@ impl Yauid {
         }
     }
 
-    pub fn get_key(&self) -> Result<u64, String> {
+    pub fn get_key(&self) -> Result<u64, Error> {
         let key = unsafe { yauid_get_key(self.ya) };
         match unsafe { (*self.ya).error } {
             0 => Ok(key as u64),
-            status => Err(self.status_to_string(status)),
+            status => Err(Error(self.status_to_string(status))),
         }
     }
 
