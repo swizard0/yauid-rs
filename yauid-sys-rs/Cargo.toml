@@ -1,6 +1,6 @@
 [package]
 name = "yauid-sys-rs"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Alexey Voznyuk <me@swizard.info>"]
 links = "yauid"
 build = "build.rs"
@@ -9,7 +9,7 @@ build = "build.rs"
 name = "yauid_sys"
 
 [dependencies]
-libc = "*"
+libc = "0.2"
 
 [build-dependencies]
-gcc = "*"
+gcc = "0.3"
